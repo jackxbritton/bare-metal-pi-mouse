@@ -20,4 +20,9 @@ Data is transmitted one byte at a time. Each byte is sent in a frame of 11 or 12
   * 1 stop bit (always 1)
   * 1 ack bit (host-to-device communication only)
 
-The device writes a bit on the data line when clock is high, and it is read by the host when clock is low. The clock frequency is 10-16.7 khz. The time from the rising edge of a clock pulse to a data transition must be at least 5 microseconds. The time from a data transition to the falling edge of a clock pulse must be at least 5 microseconds and no greater than 25 microseconds.
+The device writes a bit on the data line when clock is high, and it is read by the host when clock is low. The clock frequency is 10-16.7 khz. The time from the rising edge of a clock pulse to a data transition must be at least 5 microseconds. The time from a data transition to the falling edge of a clock pulse must be at least 5 microseconds and no greater than 25 microseconds. Data is read on the falling edge of the clock.
+
+## Code.
+
+  * kernel/include/drivers/bcm2835/bcm2835\_periph.h: GPIO and interrupt hardware stuff.
+  * kernel/interrupts/interrupts.c: Interrupt handler.

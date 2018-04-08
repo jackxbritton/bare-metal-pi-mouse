@@ -17,7 +17,8 @@ drivers-armv7.a:	\
 		gpio/gpio.armv7.a \
 		led/led.armv7.a \
 		serial/serial.armv7.a \
-		timer/timer.armv7.a
+		timer/timer.armv7.a \
+		mouse/mouse.armv7.a
 
 	$(CROSS)$(AR) crsT drivers-armv7.a \
 		drivers.armv7.o \
@@ -29,7 +30,8 @@ drivers-armv7.a:	\
 		gpio/gpio.armv7.a \
 		led/led.armv7.a \
 		serial/serial.armv7.a \
-		timer/timer.armv7.a
+		timer/timer.armv7.a \
+		mouse/mouse.armv7.a
 
 
 drivers.armv7.o:	drivers.c
@@ -61,6 +63,9 @@ serial/serial.armv7.a:	force_look
 
 timer/timer.armv7.a:	force_look
 	cd timer && make
+
+mouse/mouse.armv7.a:	force_look
+	cd mouse && make
 
 ###
 

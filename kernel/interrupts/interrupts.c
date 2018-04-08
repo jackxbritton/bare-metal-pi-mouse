@@ -92,8 +92,15 @@ void interrupt_handler_c(void) {
 		serial_interrupt_handler();
 	}
 
+    // TODO Check if it's a PS/2 mouse interrupt.
+
+    //else if (basic_pending & IRQ_BASIC_PENDING_) {
+    //    handled++;
+    //    //mouse_interrupt_handler();
+    //}
+
 	// check if it's a timer interrupt
-	if (basic_pending & IRQ_BASIC_PENDING_TIMER) {
+    else if (basic_pending & IRQ_BASIC_PENDING_TIMER) {
 		handled++;
 	}
 	else {

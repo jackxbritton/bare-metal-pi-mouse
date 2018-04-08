@@ -6,6 +6,7 @@
 #include "drivers/drivers.h"
 #include "drivers/led/led.h"
 #include "drivers/timer/timer.h"
+#include "drivers/mouse/mouse.h"
 #include "drivers/serial/serial.h"
 #include "drivers/framebuffer/framebuffer.h"
 #include "drivers/framebuffer/framebuffer_console.h"
@@ -23,6 +24,9 @@ void drivers_init_all(void) {
 
 	/* Set up timer */
 	timer_init();
+
+    // Set up the PS/2 mouse.
+    mouse_init();
 
 	/* Enable the Framebuffer */
 #if 0
