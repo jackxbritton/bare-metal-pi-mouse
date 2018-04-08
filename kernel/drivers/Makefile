@@ -84,3 +84,4 @@ clean:
 	cd led && make clean
 	cd serial && make clean
 	cd timer && make clean
+	cd mouse && make clean
