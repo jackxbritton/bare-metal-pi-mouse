@@ -217,6 +217,21 @@ int framebuffer_gradient(void) {
 
 	/* YOUR CODE HERE */
 
+    int r = 0xFF,
+        g = 0xFF,
+        b = 0xFF;
+    int color;
+
+    for (x = 0; x < 800; x++) {
+
+        r--;
+        g--;
+        b--;
+        color = (r << 16) | (g << 8) | b;
+        framebuffer_vline(color, 0, 600, x);
+
+    }
+
 	/* Force a copy of our shadow framebuffer to the actual screen */
 	framebuffer_push();
 

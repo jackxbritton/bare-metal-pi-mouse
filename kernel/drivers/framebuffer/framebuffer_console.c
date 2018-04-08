@@ -7,6 +7,8 @@
 #include "drivers/framebuffer/framebuffer_console.h"
 
 #include "c_font.h"
+#include "medieval_font.h"
+#include "marie_font.h"
 
 #include "lib/string.h"
 #include "lib/memcpy.h"
@@ -59,9 +61,27 @@ static unsigned int ansi_colors[16]={
 
 void framebuffer_console_setfont(int which) {
 
-	current_font=(unsigned char *)default_font;
-	font_ysize=16;
-	printk("Using default font\n");
+    // Choose default_font, medieval_font, or marie_font based on $which.
+
+    // TODO Print $which to see what it is! I don't know how this works.
+
+    switch (which) {
+        case 1:
+            current_font=(unsigned char *)medieval_font;
+            font_ysize=16;
+            printk("Using medieval font\n");
+            break;
+        case 2:
+            current_font=(unsigned char *)marie_font;
+            font_ysize=16;
+            printk("Using marie font\n");
+            break;
+        default:
+            current_font=(unsigned char *)default_font;
+            font_ysize=16;
+            printk("Using default font\n");
+            break;
+    }
 
 	framebuffer_clear_screen(0);
 	framebuffer_console_push();
@@ -72,12 +92,33 @@ void framebuffer_console_setfont(int which) {
 int framebuffer_console_putchar(int fore_color, int back_color,
 			int ch, int x, int y) {
 
-	int xx,yy;
+	int xx, yy;
+    int color;
 
 	if (!framebuffer_console_initialized) return -ENODEV;
 
 	/* YOUR CODE HERE */
 
+    for (yy = 0; yy < font_ysize; yy++) {
+
+        for (xx = 0; xx < 8; xx++) {
+
+            // TODO Line using current_font is new and does funky 2D-to-1D array math.
+            //      Test it.
+
+            //if ((default_font[ch][xx] >> xx) & 1)  color = 0xFFFFFF;   // White.
+            //else                                   color = back_color; // Background color.
+
+            if ((current_font[ch*16 + xx] >> xx) & 1)  color = 0xFFFFFF;   // White.
+            else                                       color = back_color; // Background color.
+
+            // TODO Check the indices here. Font might come out mirrored!
+
+            framebuffer_putpixel(color, x+7-xx, y+yy);
+
+        }
+
+    }
 
 	return 0;
 
