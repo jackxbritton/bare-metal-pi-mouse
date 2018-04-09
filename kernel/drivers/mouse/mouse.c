@@ -2,12 +2,12 @@
 
 #include <stdint.h>
 #include "drivers/gpio/gpio.h"
-
 #include "lib/printk.h"
 
 static const int gpio_clock = 23;
 static const int gpio_data  = 24;
-static int irq;
+int mouse_x = 0,
+    mouse_y = 0;
 
 int mouse_init(void) {
 
@@ -28,13 +28,16 @@ int mouse_init(void) {
     // Get the IRQ number for the clock,
     // since that's what we'll be watching.
 
-    irq = gpio_to_irq(gpio_clock);
+    int irq = gpio_to_irq(gpio_clock);
     if (irq < 0) return -1;
 
     // Watch the falling edge and enable.
 
     gpio_set_falling(gpio_clock);
     irq_enable(irq);
+
+    // TODO Send the "Enable Data Reporting" command.
+    //      See the README for details on this whole process.
 
     printk("mouse_init successful.\n");
     return 0;
@@ -62,15 +65,11 @@ static void mouse_update(unsigned char bytes[4]) {
     const int dx = bytes[1] * sy,
               dy = bytes[2] * sx;
 
-    // Right and left buttons.
-    //const int right = (bytes[0] >> 1) & 1,
-    //          left  = (bytes[0] >> 0) & 1;
+    mouse_x += dx;
+    mouse_y += dy;
 
-    // Scroll.
-    //const int
-
-    // Just output the mouse delta.
-    printk("dx: %03d, dy: %03d\n", dx, dy);
+    // Print the mouse coordinates.
+    printk("x: %03d, y: %03d\n", mouse_x, mouse_y);
 
 }
 
