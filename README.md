@@ -29,8 +29,9 @@ The device writes a bit on the data line when clock is high, and it is read by t
 | 1    | YV | XV | YS | XS | 1  | 0  | R  | L  |
 | 2    | X7 | X6 | X5 | X4 | X3 | X2 | X1 | X0 |
 | 3    | Y7 | Y6 | Y5 | Y4 | Y3 | Y2 | Y1 | Y0 |
+| 4    | S7 | S6 | S5 | S4 | S3 | S2 | S1 | S0 |
 
-YV and XV are overflow flags for the motion in Y and X directions respectively where 0 means negative motion and 1 means positive motion. R is for the right button and L is for the left button where 1 equals pressed and 0 equal unpressed. X0-X7 and Y0-Y7 are binary outputs of 0 to 255, which represent how far the mouse has moved in its respective directions since the last sample (the least significant digit is on the right). Optical mice with wheels and additional buttons generally send a fourth data packet, but for this lab, that data was not needed. 
+YV and XV are overflow flags for the motion in Y and X directions respectively where 0 means negative motion and 1 means positive motion. R is for the right button and L is for the left button where 1 equals pressed and 0 equal unpressed. X0-X7 and Y0-Y7 are binary outputs of 0 to 255, which represent how far the mouse has moved in its respective directions since the last sample (the least significant digit is on the right). The fourth byte relates the delta scroll and only applies in a certain mode (i.e. mice with scroll wheels), so we'll need to experiment with it.
 
 ## Code.
 

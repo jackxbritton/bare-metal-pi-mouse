@@ -11,7 +11,7 @@ static int irq;
 
 int mouse_init(void) {
 
-    uint32_t status;
+    int status;
 
     // Request the clock and data pins.
 
@@ -50,18 +50,19 @@ void mouse_cleanup(void) {
 
 }
 
-static void mouse_update(char bytes[3]) {
-
-    // TODO
+static void mouse_update(unsigned char bytes[4]) {
 
 }
 
 int mouse_interrupt_handler(void) {
 
-    static int byte_counter = 0,
-               bit_counter  = 0,
-               parity       = 0;
-    static char bytes[3]    = { 0, 0, 0 };
+    // TODO Do we have a scroll wheel?
+    //      If so, collect four bytes instead of three.
+
+    static int byte_counter       = 0,
+               bit_counter        = 0,
+               parity             = 0;
+    static unsigned char bytes[4] = { 0, 0, 0, 0 };
     int bit;
 
     bit = gpio_get_value(gpio_data);
@@ -95,10 +96,10 @@ int mouse_interrupt_handler(void) {
             goto mouse_interrupt_handler_failure;
         }
 
-        byte_counter = (byte_counter + 1) % 3;
+        byte_counter = (byte_counter + 1) % 4; // TODO Set to 3 if no scroll wheel.
         if (byte_counter == 0) {
 
-            // We just finished reading the third byte.
+            // We just finished reading the final byte.
 
             mouse_update(bytes);
 
@@ -131,6 +132,7 @@ mouse_interrupt_handler_failure:
     bytes[0]     = 0;
     bytes[1]     = 0;
     bytes[2]     = 0;
+    bytes[3]     = 0;
     return -1;
 
 }
