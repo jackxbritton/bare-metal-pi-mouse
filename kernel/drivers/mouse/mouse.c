@@ -52,12 +52,29 @@ void mouse_cleanup(void) {
 
 static void mouse_update(unsigned char bytes[4]) {
 
+    // Refer to the table in the README.
+
+    // Mouse movement delta signs.
+    const int sy = (bytes[0] >> 7) & 1 ? -1 : 1,
+              sx = (bytes[0] >> 6) & 1 ? -1 : 1;
+
+    // Deltas.
+    const int dx = bytes[1] * sy,
+              dy = bytes[2] * sx;
+
+    // Right and left buttons.
+    //const int right = (bytes[0] >> 1) & 1,
+    //          left  = (bytes[0] >> 0) & 1;
+
+    // Scroll.
+    //const int
+
+    // Just output the mouse delta.
+    printk("dx: %03d, dy: %03d\n", dx, dy);
+
 }
 
 int mouse_interrupt_handler(void) {
-
-    // TODO Do we have a scroll wheel?
-    //      If so, collect four bytes instead of three.
 
     static int byte_counter       = 0,
                bit_counter        = 0,
@@ -81,7 +98,7 @@ int mouse_interrupt_handler(void) {
     case  9: // Parity bit.
 
         parity += bit;
-        if (parity & 0x1 == 0) { // It's even (should be odd!).
+        if (parity & 1 == 0) { // It's even (should be odd!).
             printk("Invalid parity %x.\n", parity);
             goto mouse_interrupt_handler_failure;
         }
@@ -96,7 +113,7 @@ int mouse_interrupt_handler(void) {
             goto mouse_interrupt_handler_failure;
         }
 
-        byte_counter = (byte_counter + 1) % 4; // TODO Set to 3 if no scroll wheel.
+        byte_counter = (byte_counter + 1) % 3; // TODO Set to 4 if scroll wheel.
         if (byte_counter == 0) {
 
             // We just finished reading the final byte.
