@@ -92,22 +92,35 @@ void interrupt_handler_c(void) {
 		serial_interrupt_handler();
 	}
 
-    // TODO Check if it's a PS/2 mouse interrupt.
-
-    //else if (basic_pending & IRQ_BASIC_PENDING_) {
-    //    handled++;
-    //    //mouse_interrupt_handler();
-    //}
-
 	// check if it's a timer interrupt
     else if (basic_pending & IRQ_BASIC_PENDING_TIMER) {
 		handled++;
 	}
 	else {
-		if (!handled) {
-			printk("Unknown interrupt happened %x!\n",basic_pending);
-		}
-		return;
+    /*************************************/
+    /* Next check pending1 register      */
+    /*************************************/
+    int pending1=bcm2835_read(IRQ_PENDING1);
+    if ((pending1) && (!handled)) {
+        printk("Unknown pending1 interrupt %x\n",pending1);
+    }
+
+    /*************************************/
+    /* Next check pending2 register      */
+    /*************************************/
+    int pending2=bcm2835_read(IRQ_PENDING2);
+
+    if (pending2) {
+        // Check if GPIO23 (ps2 mouse) (irq49)
+        if (pending2 & IRQ_PENDING2_IRQ49) {
+            handled++;
+            mouse_interrupt_handler();
+        }
+
+        if (!handled) {
+            printk("Unknown pending2 interrupt %x\n",pending2);
+        }
+    }
 	}
 
 //	printk("About to handle timer interrupt\n");

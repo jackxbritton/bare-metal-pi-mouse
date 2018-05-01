@@ -26,7 +26,7 @@ void drivers_init_all(void) {
     timer_init();
 
     // Set up the PS/2 mouse.
-    mouse_init();
+    //mouse_init();
 
     /* Enable the Framebuffer */
 #if 0
@@ -42,5 +42,8 @@ void drivers_init_all(void) {
     framebuffer_console_init();
 
     serial_enable_interrupts();
+
+    // Set up the PS/2 mouse.
+    mouse_init();
 
 }

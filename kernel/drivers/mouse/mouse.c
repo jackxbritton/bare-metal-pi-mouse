@@ -4,10 +4,18 @@
 #include "drivers/gpio/gpio.h"
 #include "lib/printk.h"
 
+int32_t usleep(uint32_t usecs) {
+    int i;
+    for (i = 0; i < usecs*8e3; i++);
+}
+
 static const int gpio_clock = 23;
 static const int gpio_data  = 24;
 static int mouse_x = 0,
            mouse_y = 0;
+
+// TODO Syscalls and init code all works.
+//      Interrupts are not firing though..
 
 int mouse_init(void) {
 
@@ -39,6 +47,12 @@ int mouse_init(void) {
     // TODO Send the "Enable Data Reporting" command.
     //      See the README for details on this whole process.
 
+    // TODO Init code.
+    gpio_set_value(gpio_clock, 0);
+    usleep(100);
+    gpio_set_value(gpio_data, 0);
+    gpio_set_value(gpio_clock, 1);
+
     printk("mouse_init successful.\n");
     return 0;
 
@@ -48,8 +62,8 @@ void mouse_cleanup(void) {
 
     // Release the GPIO pins.
 
-	gpio_free(gpio_data);
-	gpio_free(gpio_clock);
+    gpio_free(gpio_data);
+    gpio_free(gpio_clock);
 
 }
 
@@ -80,6 +94,9 @@ int mouse_interrupt_handler(void) {
                parity             = 0;
     static unsigned char bytes[4] = { 0, 0, 0, 0 };
     int bit;
+
+    printk("Oh my god an interrupt\n");
+    return 0;
 
     bit = gpio_get_value(gpio_data);
 
@@ -140,7 +157,7 @@ int mouse_interrupt_handler(void) {
 
     return 0;
 
-mouse_interrupt_handler_failure:
+ mouse_interrupt_handler_failure:
 
     bit_counter  = 0;
     parity       = 0;
