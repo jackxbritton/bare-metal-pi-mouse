@@ -6,8 +6,8 @@
 
 static const int gpio_clock = 23;
 static const int gpio_data  = 24;
-int mouse_x = 0,
-    mouse_y = 0;
+static int mouse_x = 0,
+           mouse_y = 0;
 
 int mouse_init(void) {
 
@@ -17,7 +17,7 @@ int mouse_init(void) {
 
     status = gpio_request(gpio_clock, "mouse_clock");
     if (status < 0) return -1;
-    status = gpio_request(gpio_clock, "mouse_data");
+    status = gpio_request(gpio_data, "mouse_data");
     if (status < 0) return -1;
 
     // Those are inputs.
@@ -69,7 +69,7 @@ static void mouse_update(unsigned char bytes[4]) {
     mouse_y += dy;
 
     // Print the mouse coordinates.
-    printk("x: %03d, y: %03d\n", mouse_x, mouse_y);
+    //printk("x: %03d, y: %03d\n", mouse_x, mouse_y);
 
 }
 
@@ -122,7 +122,7 @@ int mouse_interrupt_handler(void) {
         }
 
         break;
-    
+
     default: // Data bits.
 
         // Put the bit into the byte and add to parity.
@@ -151,4 +151,9 @@ mouse_interrupt_handler_failure:
     bytes[3]     = 0;
     return -1;
 
+}
+
+int mouse_get(int *x, int *y) {
+    *x = mouse_x;
+    *y = mouse_y;
 }

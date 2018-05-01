@@ -129,3 +129,17 @@ void *vmwos_malloc(uint32_t size) {
 	return (void *)r0;
 }
 
+int vmwos_mouse(int *x, int *y) {
+
+	register long r7 __asm__("r7") = __NR_mouse;
+	register long r0 __asm__("r0") = x;
+	register long r1 __asm__("r1") = y;
+
+	asm volatile(
+    "svc #0\n"
+    : "=r"(r0)
+    : "r"(r7), "0"(r0), "r"(r1)
+    : "memory");
+
+	return r0;
+}

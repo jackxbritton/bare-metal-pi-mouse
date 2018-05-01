@@ -226,6 +226,10 @@ uint32_t swi_handler_c(
 			result=(uint32_t)memory_allocate(r0);
 			break;
 
+  case SYSCALL_MOUSE:
+			result=mouse_get(r0, r1);
+			break;
+
 		default:
 			printk("Unknown syscall %d\n",r7);
 			break;

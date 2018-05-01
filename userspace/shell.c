@@ -192,6 +192,11 @@ static int parse_input(char *string) {
 	else if (!strncmp(string,"random",6)) {
 		printf("%d\n",rand());
 	}
+	else if (!strncmp(string,"mouse",6)) {
+    int mouse_x, mouse_y;
+    vmwos_mouse(&mouse_x, &mouse_y);
+    printf("%d %d\n", mouse_x, mouse_y);
+	}
 	else if (strlen(string)==0) {
 		/* do nothing */
 	}

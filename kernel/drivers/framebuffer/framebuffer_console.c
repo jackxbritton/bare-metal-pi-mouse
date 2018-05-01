@@ -106,10 +106,10 @@ int framebuffer_console_putchar(int fore_color, int back_color,
             // TODO Line using current_font is new and does funky 2D-to-1D array math.
             //      Test it.
 
-            //if ((default_font[ch][xx] >> xx) & 1)  color = 0xFFFFFF;   // White.
+            //if ((default_font[ch][yy] >> xx) & 1)  color = 0xFFFFFF;   // White.
             //else                                   color = back_color; // Background color.
 
-            if ((current_font[ch*16 + xx] >> xx) & 1)  color = 0xFFFFFF;   // White.
+            if ((current_font[ch*16 + yy] >> xx) & 1)  color = 0xFFFFFF;   // White.
             else                                       color = back_color; // Background color.
 
             // TODO Check the indices here. Font might come out mirrored!
